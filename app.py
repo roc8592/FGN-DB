@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 import pandas as pd
 import json
+import os  # Import the os module to access environment variables
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -46,4 +47,5 @@ def get_players():
 
 # Run the Flask app
 if __name__ == '__main__':
-    app.run(debug=True)  # Run in debug mode for development
+    port = int(os.environ.get('PORT', 5000))  # Use PORT if set, otherwise default to 5000
+    app.run(host='0.0.0.0', port=port)  # Bind to 0.0.0.0 and use the specified port
