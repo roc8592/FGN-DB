@@ -10,7 +10,7 @@ CORS(app)  # Enable CORS for frontend-backend communication
 # Load player data from Excel
 def load_data():
     # Read the Excel file
-    df = pd.read_excel('C:/Users/roc_0/OneDrive/Documents/FGN/Vercel/FGN DB Test v1.0 - FGNDB_20250218.xlsx')
+    df = pd.read_excel('FGN DB Test v1.0 - FGNDB_20250218.xlsx')
     # Convert the data to a list of dictionaries
     return df.to_dict(orient='records')
 
