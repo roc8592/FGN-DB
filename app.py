@@ -1,7 +1,6 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import pandas as pd
-import json
 import os
 
 # Initialize Flask app
@@ -39,13 +38,13 @@ players_data = load_data()
 # API endpoint to get players with pagination and search
 @app.route('/api/players', methods=['GET'])
 def get_players():
-    club = request.args.get('club')
-    search = request.args.get('search', '').lower()
-    page = int(request.args.get('page', 1))
-    page_size = int(request.args.get('pageSize', 10))
+    fgn_manager = request.args.get('fgn_manager')  # Get FGN Manager from query params
+    search = request.args.get('search', '').lower()  # Search query (optional)
+    page = int(request.args.get('page', 1))  # Current page (default: 1)
+    page_size = int(request.args.get('pageSize', 10))  # Players per page (default: 10)
 
-    # Filter players by club
-    filtered_players = [player for player in players_data if club in player['Club']]
+    # Filter players by FGN Manager
+    filtered_players = [player for player in players_data if fgn_manager in player['FGN Manager']]
 
     # Filter players by search query (if provided)
     if search:
@@ -56,11 +55,18 @@ def get_players():
     end_index = start_index + page_size
     paginated_players = filtered_players[start_index:end_index]
 
-    # Return JSON response with all headers
+    # Return JSON response
     return jsonify({
         'players': paginated_players,  # Players for the current page
         'totalPlayers': len(filtered_players)  # Total number of players (for pagination)
     })
+
+# API endpoint to get a list of FGN Managers
+@app.route('/api/fgn_managers', methods=['GET'])
+def get_fgn_managers():
+    # Get unique FGN Managers from the data
+    fgn_managers = list(set(player['FGN Manager'] for player in players_data))
+    return jsonify(fgn_managers)
 
 # Run the Flask app
 if __name__ == '__main__':
